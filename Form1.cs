@@ -16,5 +16,10 @@ namespace Ultimate_Predictor
         {
             InitializeComponent();
         }
+
+        private void bPredict_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
