@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,9 +18,21 @@ namespace Ultimate_Predictor
             InitializeComponent();
         }
 
-        private void bPredict_Click(object sender, EventArgs e)
+        private async void bPredict_Click(object sender, EventArgs e)
         {
+            await Task.Run(() =>
+            {
+                this.Invoke(new Action(() =>
+                {
+                    for (int i = 1; i <= 100; i++)
+                    {
+                        progressBar1.Value = i;
+                        Thread.Sleep(200);
+                    }
+                }));
+            });
 
+            MessageBox.Show("Предсказание");
         }
     }
 }
