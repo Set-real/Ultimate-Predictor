@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,6 +16,9 @@ namespace Ultimate_Predictor
     public partial class Form1 : Form
     {
         private const string AppName = "Предсказатель";
+        private readonly string PredictionConfigPath = $"{Environment.CurrentDirectory}\\predictionConfig.json";
+        public string[] Predictions;
+        private Random _random = new Random();
         public Form1()
         {
             InitializeComponent();
@@ -37,7 +42,10 @@ namespace Ultimate_Predictor
                 }
             });
 
-            MessageBox.Show("Предсказание");
+            // Рандомный выбор предсказания
+            var index = _random.Next(Predictions.Length);
+            var predictions = Predictions[index];
+            MessageBox.Show($"{predictions}!");
 
             progressBar1.Value = 0;
             this.Text = AppName;
@@ -66,6 +74,28 @@ namespace Ultimate_Predictor
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = AppName;
+            try
+            {
+                var data = File.ReadAllText(PredictionConfigPath);
+
+                Predictions = JsonConvert.DeserializeObject<string[]>(data);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (Predictions == null)
+                {
+                    Close();
+                }
+                else if (Predictions.Length == 0)
+                {
+                    MessageBox.Show("Предсказания закончились, приходите в другой раз");
+                }
+            }
         }
     }
 }
